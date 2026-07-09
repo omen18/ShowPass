@@ -14,7 +14,8 @@ Browse events → Select seats → Pay → Get a QR ticket. Concurrency-safe, tr
 
 [Getting Started](#getting-started) · [Architecture](#architecture) · [API Reference](#api-reference) · [Load Testing](#load-testing) · [Roadmap](#roadmap)
 
-<img width="1280" height="765" alt="Screenshot 2026-05-03 at 12 51 45 PM" src="https://github.com/user-attachments/assets/b7424dc3-12a3-4ec4-b8fc-199c6ca1d390" />
+<img width="1278" height="678" alt="Screenshot 2026-07-10 at 2 34 47 AM" src="https://github.com/user-attachments/assets/eedce114-8ce7-493e-b4b4-8405bd24c6b1" />
+
 
 
 </div>
@@ -250,7 +251,11 @@ The new `/api/book-ticket` route does all of this atomically:
 
 Returns `409 Conflict` with the conflicting seat list so clients can recover gracefully.
 
-<img width="1280" height="765" alt="Screenshot 2026-05-03 at 12 51 59 PM" src="https://github.com/user-attachments/assets/78982f68-4b7f-472c-ab7d-77509ab5a81e" />
+<img width="1280" height="676" alt="Screenshot 2026-07-10 at 2 34 13 AM" src="https://github.com/user-attachments/assets/acf03592-8b56-4c3e-8e6d-6218ded3e7c3" />
+<img width="1280" height="683" alt="Screenshot 2026-07-10 at 2 30 27 AM" src="https://github.com/user-attachments/assets/b5da7276-9507-407b-81ab-acb62c2f0262" />
+<img width="1275" height="682" alt="Screenshot 2026-07-10 at 2 31 39 AM" src="https://github.com/user-attachments/assets/a444236e-f938-4f9c-b9d9-bb2375a59d15" />
+
+
 
 ---
 
