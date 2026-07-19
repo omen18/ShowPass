@@ -29,6 +29,7 @@ interface EventData {
   event_id: number;
   event_name: string;
   event_date: string;
+  poster_url?: string | null;
   venue?: { venue_name: string; location: string; capacity: number };
   category?: { category_name: string };
   organizer?: { name: string; contact: string };
@@ -105,7 +106,7 @@ export default function EventDetailClient({ event }: { event: EventData }) {
   const [submitting, setSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const { event_id, event_name, event_date, venue, category, organizer, artists = [], reviews, availableSeats, totalSeats } = event;
+  const { event_id, event_name, event_date, poster_url, venue, category, organizer, artists = [], reviews, availableSeats, totalSeats } = event;
 
   // Derived review stats
   const avgRating = reviews.length ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0;
@@ -147,7 +148,7 @@ export default function EventDetailClient({ event }: { event: EventData }) {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  const bannerSeed = event_id * 37;
+  const bannerImg = poster_url ?? `https://picsum.photos/seed/${event_id * 37}/1280/720`;
   const bannerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: bannerRef, offset: ["start start", "end start"] });
@@ -180,7 +181,7 @@ export default function EventDetailClient({ event }: { event: EventData }) {
         <div ref={bannerRef} className="reveal-item relative mb-8 aspect-video w-full overflow-hidden rounded-2xl bg-zinc-100 shadow-[0_24px_60px_rgba(8,48,71,0.14)]">
           <motion.div className="absolute inset-0" style={{ y: bannerY, scale: bannerScale }}>
             <Image
-              src={`https://picsum.photos/seed/${bannerSeed}/1280/720`}
+              src={bannerImg}
               alt={event_name}
               fill
               className="object-cover"
@@ -274,8 +275,21 @@ export default function EventDetailClient({ event }: { event: EventData }) {
                   <p className="mb-4 flex items-center gap-1.5 text-sm text-[var(--text-secondary)]">
                     <Users size={14} /> Capacity: {venue.capacity.toLocaleString("en-IN")} seats
                   </p>
-                  <div className="flex h-36 items-center justify-center rounded-lg bg-zinc-100 text-sm text-[var(--text-muted)]">
-                    Map unavailable
+                  <div className="relative overflow-hidden rounded-lg">
+                    <iframe
+                      src={`https://maps.google.com/maps?q=${encodeURIComponent(`${venue.venue_name}, ${venue.location}`)}&output=embed&z=15`}
+                      className="h-48 w-full border-0"
+                      loading="lazy"
+                      title={`Map of ${venue.venue_name}`}
+                    />
+                    <a
+                      href={`https://maps.google.com/maps?q=${encodeURIComponent(`${venue.venue_name}, ${venue.location}`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute bottom-2 right-2 flex items-center gap-1 rounded-md bg-white/90 px-2 py-1 text-[11px] font-medium text-[var(--accent-dark)] shadow-sm backdrop-blur-sm hover:bg-white transition-colors"
+                    >
+                      <MapPin size={10} /> Open in Maps
+                    </a>
                   </div>
                 </div>
               </section>

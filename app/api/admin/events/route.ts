@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const { event_name, event_date, venue_id, category_id, organizer_id } = parsed.data;
+  const { event_name, event_date, venue_id, category_id, organizer_id, poster_url } = parsed.data;
 
   // The legacy schema requires Event.admin_id to point to the Admin table.
   // We resolve the current user's matching admin row by email.
@@ -72,10 +72,12 @@ export async function POST(request: Request) {
     );
   }
 
+  const posterUrlValue = poster_url || null;
+
   const [result] = await db.query<ResultSetHeader>(
-    `INSERT INTO Event (event_name, event_date, venue_id, category_id, organizer_id, admin_id)
-     VALUES (?, ?, ?, ?, ?, ?)`,
-    [event_name, event_date, venue_id, category_id, organizer_id, adminId],
+    `INSERT INTO Event (event_name, event_date, venue_id, category_id, organizer_id, admin_id, poster_url)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [event_name, event_date, venue_id, category_id, organizer_id, adminId, posterUrlValue],
   );
 
   return NextResponse.json(
@@ -88,6 +90,7 @@ export async function POST(request: Request) {
         category_id,
         organizer_id,
         admin_id: adminId,
+        poster_url: posterUrlValue,
       },
     },
     { status: 201 },

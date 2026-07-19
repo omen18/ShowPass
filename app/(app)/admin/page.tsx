@@ -62,6 +62,7 @@ export default function AdminPage() {
   const [venueId, setVenueId] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [organizerId, setOrganizerId] = useState("");
+  const [posterUrl, setPosterUrl] = useState("");
 
   const adminEmail = user?.email ?? "";
 
@@ -137,6 +138,7 @@ export default function AdminPage() {
           venue_id: Number(venueId),
           category_id: Number(categoryId),
           organizer_id: Number(organizerId),
+          poster_url: posterUrl || undefined,
         }),
       });
       const json = await res.json();
@@ -144,7 +146,7 @@ export default function AdminPage() {
         setError(json.error?.formErrors?.[0] ?? json.error ?? "Unable to create event");
         return;
       }
-      setEventName(""); setEventDate(""); setVenueId(""); setCategoryId(""); setOrganizerId("");
+      setEventName(""); setEventDate(""); setVenueId(""); setCategoryId(""); setOrganizerId(""); setPosterUrl("");
       await fetchDashboardData();
     } catch {
       setError("Network error while creating event");
@@ -322,6 +324,15 @@ export default function AdminPage() {
               <option value="">Select organizer</option>
               {organizers.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
             </select>
+          </Field>
+          <Field label="Poster Image URL (optional)">
+            <input
+              type="url"
+              value={posterUrl}
+              onChange={(e) => setPosterUrl(e.target.value)}
+              className="w-full rounded-lg border border-[var(--border)] bg-white px-3 py-2.5 text-sm transition focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/20"
+              placeholder="https://example.com/poster.jpg"
+            />
           </Field>
           <div className="flex items-end md:col-span-2">
             <button

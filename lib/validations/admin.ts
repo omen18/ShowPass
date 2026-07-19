@@ -10,6 +10,7 @@ export const adminCreateEventSchema = z.object({
   venue_id: z.coerce.number().int().positive(),
   category_id: z.coerce.number().int().positive(),
   organizer_id: z.coerce.number().int().positive(),
+  poster_url: z.string().url("Enter a valid image URL").optional().or(z.literal("")),
 });
 
 export type AdminCreateEventInput = z.infer<typeof adminCreateEventSchema>;

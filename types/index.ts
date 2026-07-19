@@ -34,6 +34,7 @@ export interface Event {
   category_id: number;
   organizer_id: number;
   admin_id: number;
+  poster_url?: string | null;
   venue?: Venue;
   category?: Category;
   organizer?: Organizer;

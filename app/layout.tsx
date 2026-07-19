@@ -25,8 +25,8 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  title: "BOOKING_SYSTEM",
-  description: "Foundation setup for the booking system",
+  title: "Yash Raj Sharan",
+  description: "India's #1 multi-service platform. Book movies, hotels, trains, flights, food, stays and city experiences — all in one place.",
 };
 
 export default function RootLayout({

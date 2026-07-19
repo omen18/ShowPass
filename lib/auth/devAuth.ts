@@ -22,6 +22,33 @@ const seedUsers: DevAuthUser[] = [
     is_admin: false,
     role: "user",
   },
+  {
+    user_id: 2,
+    name: "Yash",
+    email: "yash1@gmail.com",
+    phone: "+91-9876543210",
+    password: "pass123",
+    is_admin: false,
+    role: "user",
+  },
+  {
+    user_id: 3,
+    name: "Rahul",
+    email: "rahul2@gmail.com",
+    phone: "+91-9876543211",
+    password: "pass123",
+    is_admin: false,
+    role: "user",
+  },
+  {
+    user_id: 4,
+    name: "Rohan",
+    email: "rohan@gmail.com",
+    phone: "+91-9876543212",
+    password: "pass123",
+    is_admin: false,
+    role: "user",
+  },
 ];
 
 function getUsersStore() {

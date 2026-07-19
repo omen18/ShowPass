@@ -4,6 +4,7 @@ import {
   artists as mockArtists,
   categories as mockCategories,
   events as mockEvents,
+  eventArtistMap,
   organizers as mockOrganizers,
   reviews as mockReviews,
   seats as mockSeats,
@@ -18,6 +19,7 @@ interface EventRow extends RowDataPacket {
   category_id: number;
   organizer_id: number;
   admin_id: number;
+  poster_url: string | null;
   venue_name: string;
   location: string;
   capacity: number;
@@ -61,20 +63,14 @@ function canUseDatabase() {
 }
 
 function buildMockEvents() {
-  const eventArtists: Record<number, typeof mockArtists> = {
-    1: [],
-    2: [mockArtists[0], mockArtists[3]],
-    3: [mockArtists[2]],
-    4: [mockArtists[1]],
-    5: [mockArtists[4]],
-  };
-
   return mockEvents.map((event) => ({
     ...event,
-    venue: mockVenues.find((venue) => venue.venue_id === event.venue_id),
-    category: mockCategories.find((category) => category.category_id === event.category_id),
-    organizer: mockOrganizers.find((organizer) => organizer.organizer_id === event.organizer_id),
-    artists: eventArtists[event.event_id] ?? [],
+    venue: mockVenues.find((v) => v.venue_id === event.venue_id),
+    category: mockCategories.find((c) => c.category_id === event.category_id),
+    organizer: mockOrganizers.find((o) => o.organizer_id === event.organizer_id),
+    artists: (eventArtistMap[event.event_id] ?? []).map((id) =>
+      mockArtists.find((a) => a.artist_id === id)!,
+    ).filter(Boolean),
   }));
 }
 
@@ -167,7 +163,7 @@ export async function getEvents(filters: EventFilters = {}) {
     const [rows] = await db.query<EventRow[]>(
       `SELECT
          e.event_id, e.event_name, e.event_date, e.venue_id, e.category_id,
-         e.organizer_id, e.admin_id,
+         e.organizer_id, e.admin_id, e.poster_url,
          v.venue_name, v.location, v.capacity,
          c.category_name,
          o.name AS organizer_name, o.contact
@@ -205,6 +201,7 @@ export async function getEvents(filters: EventFilters = {}) {
       category_id: r.category_id,
       organizer_id: r.organizer_id,
       admin_id: r.admin_id,
+      poster_url: r.poster_url ?? null,
       venue: {
         venue_id: r.venue_id,
         venue_name: r.venue_name,

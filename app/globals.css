@@ -19,6 +19,14 @@
   --neu-base: #f4fbff;
   --neu-dark: #c8dfea;
   --neu-light: #ffffff;
+
+  /* Service accent colors */
+  --hotel: #f59e0b;
+  --train: #22c55e;
+  --flight: #6366f1;
+  --food: #ef4444;
+  --stays: #a855f7;
+  --explore: #14b8a6;
 }
 
 html {
@@ -26,7 +34,7 @@ html {
 }
 
 ::selection {
-  background: rgba(31, 126, 168, 0.18);
+  background: rgba(18, 123, 163, 0.22);
   color: #0f2f45;
 }
 
@@ -41,14 +49,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1,
-h2,
-h3,
-h4,
-.font-display {
+h1, h2, h3, h4, .font-display {
   font-family: var(--font-syne), Syne, sans-serif;
 }
 
+/* ── Neumorphic surfaces ── */
 .neu-raised {
   background: var(--neu-base);
   box-shadow: 6px 6px 12px var(--neu-dark), -6px -6px 12px var(--neu-light);
@@ -61,6 +66,7 @@ h4,
   box-shadow: inset 4px 4px 8px var(--neu-dark), inset -4px -4px 8px var(--neu-light);
 }
 
+/* ── Glass surfaces ── */
 .glass-dark {
   background: rgba(8, 48, 71, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -68,21 +74,44 @@ h4,
   -webkit-backdrop-filter: blur(24px);
 }
 
-/* Seat map scrollbar */
+.glass-hero {
+  background: rgba(5, 14, 26, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(204, 227, 239, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ── Dark hero section ── */
+.hero-dark {
+  background:
+    radial-gradient(circle at 10% 20%, rgba(18, 123, 163, 0.22) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(53, 168, 214, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.06) 0%, transparent 60%),
+    #050e1a;
+}
+
+/* ── Seat map scrollbar ── */
 .seat-scroll::-webkit-scrollbar { height: 4px; }
 .seat-scroll::-webkit-scrollbar-track { background: transparent; }
 .seat-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
-/* Custom cursor — hide native pointer when JS cursor is active */
+/* ── Custom cursor — hide native when JS cursor active ── */
 body.no-cursor,
 body.no-cursor * {
   cursor: none !important;
 }
 
-/* Reveal animation base — GSAP targets */
+/* ── Reveal animation ── */
 .reveal-item { will-change: transform, opacity; }
 
-/* Shimmer skeleton */
+/* ── Shimmer skeleton ── */
 .shimmer {
   background: linear-gradient(90deg,
     rgba(200,223,234,0.45) 25%,
@@ -93,13 +122,13 @@ body.no-cursor * {
   animation: shimmer 1.6s ease-in-out infinite;
 }
 
-/* Focus ring glow on inputs and textareas */
+/* ── Focus ring ── */
 input:focus, textarea:focus, select:focus {
   box-shadow: 0 0 0 3px rgba(18,123,163,0.18), inset 4px 4px 8px var(--neu-dark), inset -4px -4px 8px var(--neu-light);
   outline: none;
 }
 
-/* Interactive link underline */
+/* ── Animated underline link ── */
 .animated-link {
   position: relative;
 }
@@ -113,7 +142,7 @@ input:focus, textarea:focus, select:focus {
 }
 .animated-link:hover::after { width: 100%; }
 
-/* Click ripple */
+/* ── Click ripple ── */
 .ripple {
   position: relative;
   overflow: hidden;
@@ -134,7 +163,7 @@ input:focus, textarea:focus, select:focus {
   to { transform: translate(-50%, -50%) scale(6); opacity: 0; }
 }
 
-/* Card glow on hover */
+/* ── Card hover ── */
 .card-hover {
   transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
 }
@@ -142,6 +171,55 @@ input:focus, textarea:focus, select:focus {
   box-shadow: 0 24px 48px rgba(18,123,163,0.13);
   border-color: rgba(18,123,163,0.28);
   transform: translateY(-3px);
+}
+
+/* ── Gradient text utilities ── */
+.text-gradient-blue {
+  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-glow {
+  background: linear-gradient(135deg, #35a8d6 0%, #127ba3 50%, #083047 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Service category badge colors ── */
+.badge-movies  { background: rgba(99,102,241,0.15);  color: #818cf8; border-color: rgba(99,102,241,0.25); }
+.badge-hotels  { background: rgba(245,158,11,0.15);  color: #fbbf24; border-color: rgba(245,158,11,0.25); }
+.badge-trains  { background: rgba(34,197,94,0.15);   color: #4ade80; border-color: rgba(34,197,94,0.25); }
+.badge-flights { background: rgba(59,130,246,0.15);  color: #60a5fa; border-color: rgba(59,130,246,0.25); }
+.badge-food    { background: rgba(239,68,68,0.15);   color: #f87171; border-color: rgba(239,68,68,0.25); }
+.badge-stays   { background: rgba(168,85,247,0.15);  color: #c084fc; border-color: rgba(168,85,247,0.25); }
+.badge-explore { background: rgba(20,184,166,0.15);  color: #2dd4bf; border-color: rgba(20,184,166,0.25); }
+
+/* ── Service page hero gradients ── */
+.hero-hotels  { background: linear-gradient(135deg, #1a0a00 0%, #2d1700 40%, #0d1a2d 100%); }
+.hero-trains  { background: linear-gradient(135deg, #001a0d 0%, #00251a 40%, #0a1a0d 100%); }
+.hero-flights { background: linear-gradient(135deg, #06001a 0%, #0f0030 40%, #0a0020 100%); }
+.hero-food    { background: linear-gradient(135deg, #1a0000 0%, #2d0808 40%, #0d0000 100%); }
+.hero-stays   { background: linear-gradient(135deg, #1a001a 0%, #250030 40%, #0d0015 100%); }
+.hero-explore { background: linear-gradient(135deg, #001a18 0%, #002520 40%, #001a14 100%); }
+
+/* ── Cursor click burst ── */
+@keyframes cursor-burst {
+  0%   { transform: translate(-50%,-50%) scale(0); opacity: 0.8; }
+  100% { transform: translate(-50%,-50%) scale(3); opacity: 0; }
+}
+
+.cursor-burst {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9998;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  animation: cursor-burst 0.45s ease-out forwards;
 }
 
 @layer utilities {

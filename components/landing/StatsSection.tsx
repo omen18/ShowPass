@@ -18,44 +18,36 @@ interface StatItem {
 }
 
 const stats: StatItem[] = [
-  { value: 50000, suffix: "+", label: "Events Booked", prefix: "", large: true },
-  { value: 200, suffix: "+", label: "Venues Nationwide" },
-  { value: 4.9, suffix: "★", label: "Average Rating", starColor: "#127ba3" },
-  { value: 30, suffix: "sec", label: "Avg Booking Time", prefix: "<", mono: true },
+  { value: 5000000, suffix: "+", label: "Bookings Made",    prefix: "", large: true },
+  { value: 100,     suffix: "+", label: "Cities Covered" },
+  { value: 4.9,     suffix: "★", label: "Average Rating",   starColor: "#127ba3" },
+  { value: 7,       suffix: "",  label: "Services in One App" },
 ];
 
 const marqueeText =
-  "GRAND CINEMA HALL • MUSIC ARENA • CITY THEATRE • AR RAHMAN CONCERT • SPRING FESTIVAL • AVENGERS NIGHT •";
+  "MOVIES • HOTELS • TRAINS • FLIGHTS • FOOD • STAYS • EXPLORE • AR RAHMAN LIVE • THE GRAND HYATT • INDIGO AIRLINES • ZOMATO GOLD • AIRBNB STAYS • HERITAGE WALKS • MUMBAI • DELHI • BANGALORE • CHENNAI • GOA •";
 
 function formatValue(value: number, item: StatItem) {
-  if (item.value % 1 !== 0) {
-    return value.toFixed(1);
-  }
-
+  if (item.value % 1 !== 0) return value.toFixed(1);
+  if (item.value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+  if (item.value >= 1000)    return `${Math.round(value / 1000)}K`;
   return Math.round(value).toLocaleString("en-IN");
 }
 
 export default function StatsSection() {
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const lineRef = useRef<SVGLineElement | null>(null);
-  const counterRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const sectionRef    = useRef<HTMLElement | null>(null);
+  const lineRef       = useRef<SVGLineElement | null>(null);
+  const counterRefs   = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
     const section = sectionRef.current;
-    const line = lineRef.current;
-
-    if (!section) {
-      return;
-    }
+    if (!section) return;
 
     const triggers: ScrollTrigger[] = [];
 
     stats.forEach((item, index) => {
-      const element = counterRefs.current[index];
-
-      if (!element) {
-        return;
-      }
+      const el = counterRefs.current[index];
+      if (!el) return;
 
       const trigger = ScrollTrigger.create({
         trigger: section,
@@ -63,52 +55,39 @@ export default function StatsSection() {
         once: true,
         onEnter: () => {
           const state = { value: 0 };
-
           gsap.to(state, {
             value: item.value,
-            duration: 2,
+            duration: 2.2,
             ease: "power2.out",
             snap: { value: item.value % 1 !== 0 ? 0.1 : 1 },
             onUpdate: () => {
-              const formatted = formatValue(state.value, item);
-              element.innerText = `${item.prefix ?? ""}${formatted}${item.suffix}`;
+              el.innerText = `${item.prefix ?? ""}${formatValue(state.value, item)}${item.suffix}`;
             },
           });
         },
       });
-
       triggers.push(trigger);
     });
 
+    const line = lineRef.current;
     if (line) {
-      const totalLength = line.getTotalLength();
-      line.style.strokeDasharray = `${totalLength}`;
-      line.style.strokeDashoffset = `${totalLength}`;
-
+      const len = line.getTotalLength();
+      line.style.strokeDasharray  = `${len}`;
+      line.style.strokeDashoffset = `${len}`;
       const trigger = ScrollTrigger.create({
         trigger: section,
         start: "top 80%",
         once: true,
-        onEnter: () => {
-          gsap.to(line, {
-            strokeDashoffset: 0,
-            duration: 1.6,
-            ease: "power2.out",
-          });
-        },
+        onEnter: () => gsap.to(line, { strokeDashoffset: 0, duration: 1.6, ease: "power2.out" }),
       });
-
       triggers.push(trigger);
     }
 
-    return () => {
-      triggers.forEach((trigger) => trigger.kill());
-    };
+    return () => { triggers.forEach((t) => t.kill()); };
   }, []);
 
   const initialValues = useMemo(
-    () =>
-      stats.map((item) => `${item.prefix ?? ""}${item.value % 1 !== 0 ? "0.0" : "0"}${item.suffix}`),
+    () => stats.map((item) => `${item.prefix ?? ""}${item.value % 1 !== 0 ? "0.0" : "0"}${item.suffix}`),
     [],
   );
 
@@ -124,10 +103,7 @@ export default function StatsSection() {
             <line ref={lineRef} x1="0" y1="1" x2="1200" y2="1" stroke="rgba(18,123,163,0.24)" strokeWidth="1" />
           </svg>
 
-          <div
-            className="grid gap-6"
-            style={{ gridTemplateColumns: "2fr 1fr 1fr 1fr" }}
-          >
+          <div className="grid gap-6" style={{ gridTemplateColumns: "2fr 1fr 1fr 1fr" }}>
             {stats.map((item, index) => (
               <article
                 key={`${item.label}-${index}`}
@@ -135,9 +111,7 @@ export default function StatsSection() {
               >
                 <p className={`${item.large ? "text-5xl" : "text-4xl"} ${item.mono ? "font-mono" : "font-display"} font-extrabold leading-none text-[var(--accent-dark)]`}>
                   <span
-                    ref={(element) => {
-                      counterRefs.current[index] = element;
-                    }}
+                    ref={(el) => { counterRefs.current[index] = el; }}
                     className={item.starColor ? "text-[color:var(--star-color)]" : ""}
                     style={item.starColor ? ({ "--star-color": item.starColor } as CSSProperties) : undefined}
                   >
@@ -150,6 +124,7 @@ export default function StatsSection() {
           </div>
         </div>
 
+        {/* Marquee */}
         <div className="mt-10 space-y-2 overflow-hidden border-t border-[rgba(8,48,71,0.1)] pt-4">
           {[0, 1].map((row) => (
             <div key={`marquee-${row}`} className="flex min-w-max animate-marquee gap-10 whitespace-nowrap font-mono text-[11px] tracking-[0.12em] text-[var(--text-muted)]">

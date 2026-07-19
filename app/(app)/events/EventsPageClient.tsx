@@ -15,11 +15,20 @@ type EventItem = {
   event_name: string;
   event_date: string;
   price?: number;
+  poster_url?: string | null;
   venue?: { venue_name: string; location: string };
   category?: { category_name: string };
   organizer?: { name: string };
   artists?: { artist_name: string; genre: string }[];
 };
+
+function posterSrc(event_id: number, poster_url?: string | null): string {
+  return poster_url ?? `https://picsum.photos/seed/${event_id * 37}/600/900`;
+}
+
+function bannerSrc(event_id: number, poster_url?: string | null): string {
+  return poster_url ?? `https://picsum.photos/seed/${event_id * 37}/900/500`;
+}
 
 // ── Static coming-soon enrichment data (events NOT yet in DB) ────────────────
 const COMING_SOON = [
@@ -98,13 +107,16 @@ function HeroSlider({ events }: { events: EventItem[] }) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.7 }}
         >
-          {/* Noise overlay */}
-          <div className="absolute inset-0 opacity-[0.07]"
-            style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")" }} />
+          {/* Real image */}
+          <img
+            src={bannerSrc(cur.event_id, cur.poster_url)}
+            alt={cur.event_name}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
           {/* Bottom gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
           {/* Radial ambient */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.1)_0%,transparent_60%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.08)_0%,transparent_60%)]" />
         </motion.div>
       </AnimatePresence>
 
@@ -321,15 +333,14 @@ function EventPosterCard({ event, index }: { event: EventItem; index: number }) 
       >
         {/* Poster */}
         <div className={`relative h-[220px] w-full overflow-hidden rounded-xl bg-gradient-to-br ${meta.gradient}`}>
-          {/* Texture */}
-          <div className="absolute inset-0 opacity-[0.08]"
-            style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")" }} />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-          {/* Center icon */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            {(() => { const Icon = meta.icon; return <Icon size={48} className="text-white/20 group-hover:text-white/35 transition-colors duration-300" />; })()}
-          </div>
+          {/* Real image */}
+          <img
+            src={posterSrc(event.event_id, event.poster_url)}
+            alt={event.event_name}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
 
           {/* Top tags */}
           <div className="absolute top-2 left-2 right-2 flex items-start justify-between">
@@ -484,12 +495,13 @@ function LandscapeEventCard({ event, index }: { event: EventItem; index: number 
       >
         {/* Banner */}
         <div className={`h-[120px] w-full bg-gradient-to-br ${meta.gradient} relative overflow-hidden`}>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-          <div className="absolute inset-0 opacity-[0.06]"
-            style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")" }} />
-          <div className="absolute inset-0 flex items-center justify-center">
-            {(() => { const Icon = meta.icon; return <Icon size={40} className="text-white/15" />; })()}
-          </div>
+          <img
+            src={bannerSrc(event.event_id, event.poster_url)}
+            alt={event.event_name}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/10" />
           {/* Category tag */}
           <div className="absolute bottom-2 left-3">
             <span className="rounded-full bg-white/20 border border-white/20 px-2.5 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
@@ -593,12 +605,13 @@ function GridEventCard({ event, index }: { event: EventItem; index: number }) {
       >
         {/* Banner */}
         <div className={`relative h-44 w-full overflow-hidden bg-gradient-to-br ${meta.gradient}`}>
-          <div className="absolute inset-0 opacity-[0.07]"
-            style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")" }} />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            {(() => { const Icon = meta.icon; return <Icon size={52} className="text-white/15 group-hover:text-white/25 transition-colors duration-300" />; })()}
-          </div>
+          <img
+            src={bannerSrc(event.event_id, event.poster_url)}
+            alt={event.event_name}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
 
           {/* Shimmer sweep */}
           <motion.div
