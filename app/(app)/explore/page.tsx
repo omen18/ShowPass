@@ -213,7 +213,7 @@ export default function ExplorePage() {
       <div className="min-h-screen bg-gray-50">
         {/* City Hero */}
         <div className="relative h-72 md:h-96 overflow-hidden">
-          <img src={selectedCity.heroImg} alt={selectedCity.city} className="w-full h-full object-cover" />
+          <Image fill unoptimized src={selectedCity.heroImg} alt={selectedCity.city} className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
           <button onClick={() => setSelectedCity(null)}
             className="absolute top-4 left-4 bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-xl px-4 py-2 text-sm font-medium hover:bg-white/30 transition-all flex items-center gap-2">
@@ -274,7 +274,7 @@ export default function ExplorePage() {
                 <motion.div key={item.name} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ delay: i * 0.07 }}
                   className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all group">
                   <div className="relative h-44 overflow-hidden">
-                    <img src={item.img} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <Image fill unoptimized src={item.img} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     <div className="absolute top-3 left-3">
                       <span className="bg-white/90 backdrop-blur-sm text-xs font-semibold text-gray-700 px-2.5 py-1 rounded-lg">{item.type}</span>
                     </div>
@@ -345,7 +345,7 @@ export default function ExplorePage() {
               onClick={() => setSelectedCity(city)}
               className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
               <div className="relative h-52 overflow-hidden">
-                <img src={city.heroImg} alt={city.city} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                <Image fill unoptimized src={city.heroImg} alt={city.city} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4">
                   <p className="text-white/70 text-xs font-medium mb-0.5">{city.state}</p>
@@ -386,7 +386,7 @@ export default function ExplorePage() {
         {filteredCities.length === 0 && (
           <div className="text-center py-20 text-gray-400">
             <div className="text-5xl mb-3">🗺️</div>
-            <p className="text-lg font-medium">No cities found for "{search}"</p>
+            <p className="text-lg font-medium">No cities found for &quot;{search}&quot;</p>
             <p className="text-sm mt-1">Try searching for Mumbai, Delhi, Goa, or Jaipur</p>
           </div>
         )}

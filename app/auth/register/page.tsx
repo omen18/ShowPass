@@ -5,14 +5,21 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
-import { Eye, EyeOff, ArrowRight, Check, User, Mail, Phone, Lock } from "lucide-react";
+import { Eye, EyeOff, Check, User, Mail, Phone, Lock } from "lucide-react";
 import { useUserStore } from "@/lib/store/userStore";
 
 // ── Celebration overlay after register ───────────────────────────────────────
 const CONFETTI_COLORS = ["#b65b3a", "#c47d50", "#f59e0b", "#22c55e", "#818cf8", "#f472b6"];
 
 function Celebration({ name }: { name: string }) {
-  const particles = Array.from({ length: 48 });
+  const [particles] = useState(() => Array.from({ length: 48 }).map((_, i) => {
+    return {
+      angle: (i / 48) * 360,
+      dist: 120 + Math.random() * 200,
+      color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
+      size: 4 + Math.random() * 6
+    };
+  }));
 
   return (
     <motion.div
@@ -20,20 +27,16 @@ function Celebration({ name }: { name: string }) {
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}
     >
       {/* Confetti burst */}
-      {particles.map((_, i) => {
-        const angle = (i / particles.length) * 360;
-        const dist = 120 + Math.random() * 200;
-        const color = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
-        const size = 4 + Math.random() * 6;
+      {particles.map((p, i) => {
         return (
           <motion.div key={i}
             className="absolute rounded-sm"
-            style={{ width: size, height: size, backgroundColor: color, top: "50%", left: "50%" }}
+            style={{ width: p.size, height: p.size, backgroundColor: p.color, top: "50%", left: "50%" }}
             initial={{ x: 0, y: 0, opacity: 1, rotate: 0, scale: 1 }}
             animate={{
-              x: Math.cos((angle * Math.PI) / 180) * dist,
-              y: Math.sin((angle * Math.PI) / 180) * dist,
-              opacity: 0, rotate: angle * 2, scale: 0,
+              x: Math.cos((p.angle * Math.PI) / 180) * p.dist,
+              y: Math.sin((p.angle * Math.PI) / 180) * p.dist,
+              opacity: 0, rotate: p.angle * 2, scale: 0,
             }}
             transition={{ delay: 0.2 + (i % 8) * 0.04, duration: 1.1, ease: [0.2, 0.8, 0.4, 1] }}
           />

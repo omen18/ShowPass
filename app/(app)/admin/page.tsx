@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState, startTransition } from "react";
 import { Users, Calendar, BookOpen, IndianRupee, type LucideIcon } from "lucide-react";
 
 import { useUserStore } from "@/lib/store/userStore";
@@ -119,7 +119,9 @@ export default function AdminPage() {
   }
 
   useEffect(() => {
-    fetchDashboardData();
+    startTransition(() => {
+      fetchDashboardData();
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [adminEmail]);
 

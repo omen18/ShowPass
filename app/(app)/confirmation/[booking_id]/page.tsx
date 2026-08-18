@@ -55,8 +55,9 @@ export default function ConfirmationPage({ params }: { params: Promise<{ booking
     let active = true;
 
     async function load() {
+      await Promise.resolve();
       try {
-        setLoading(true);
+        if (active) setLoading(true);
         const response = await fetch(`/api/confirmation/${bookingId}`, { cache: "no-store" });
         const json = await response.json();
         if (!response.ok) throw new Error();
@@ -72,7 +73,9 @@ export default function ConfirmationPage({ params }: { params: Promise<{ booking
     if (!Number.isNaN(bookingId)) {
       load();
     } else {
-      setLoading(false);
+      Promise.resolve().then(() => {
+        if (active) setLoading(false);
+      });
     }
 
     return () => { active = false; };

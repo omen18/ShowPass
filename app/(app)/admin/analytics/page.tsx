@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { TrendingUp, IndianRupee, Users, Ticket as TicketIcon, BarChart3 } from "lucide-react";
+import { TrendingUp, IndianRupee, Users, Ticket as TicketIcon } from "lucide-react";
 
 type Analytics = {
   kpis: {
@@ -345,7 +345,7 @@ function DailyTrendChart({
       {/* X labels (sparse) */}
       {points
         .filter((_, i) => i === 0 || i === points.length - 1 || i % Math.ceil(points.length / 6) === 0)
-        .map((p, _idx) => {
+        .map((p) => {
           const realIdx = points.indexOf(p);
           return (
             <text

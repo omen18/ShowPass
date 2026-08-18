@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import {
   MapPin, Calendar, ArrowRight, Search, X, ChevronLeft, ChevronRight,
@@ -108,7 +109,9 @@ function HeroSlider({ events }: { events: EventItem[] }) {
           transition={{ duration: 0.7 }}
         >
           {/* Real image */}
-          <img
+          <Image
+            fill
+            unoptimized
             src={bannerSrc(cur.event_id, cur.poster_url)}
             alt={cur.event_name}
             className="absolute inset-0 h-full w-full object-cover"
@@ -334,10 +337,11 @@ function EventPosterCard({ event, index }: { event: EventItem; index: number }) 
         {/* Poster */}
         <div className={`relative h-[220px] w-full overflow-hidden rounded-xl bg-gradient-to-br ${meta.gradient}`}>
           {/* Real image */}
-          <img
+          <Image
+            fill
+            unoptimized
             src={posterSrc(event.event_id, event.poster_url)}
             alt={event.event_name}
-            loading="lazy"
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
@@ -495,10 +499,11 @@ function LandscapeEventCard({ event, index }: { event: EventItem; index: number 
       >
         {/* Banner */}
         <div className={`h-[120px] w-full bg-gradient-to-br ${meta.gradient} relative overflow-hidden`}>
-          <img
+          <Image
+            fill
+            unoptimized
             src={bannerSrc(event.event_id, event.poster_url)}
             alt={event.event_name}
-            loading="lazy"
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/10" />
@@ -605,10 +610,11 @@ function GridEventCard({ event, index }: { event: EventItem; index: number }) {
       >
         {/* Banner */}
         <div className={`relative h-44 w-full overflow-hidden bg-gradient-to-br ${meta.gradient}`}>
-          <img
+          <Image
+            fill
+            unoptimized
             src={bannerSrc(event.event_id, event.poster_url)}
             alt={event.event_name}
-            loading="lazy"
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />

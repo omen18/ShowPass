@@ -56,7 +56,7 @@ export default function ProfileReviewsPage() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [user?.user_id]);
 
   const myReviews = useMemo(() => reviews.filter((review) => review.user_id === user?.user_id), [reviews, user?.user_id]);
 

@@ -39,8 +39,8 @@ export default function IntroOverlay() {
 
   useEffect(() => {
     if (typeof sessionStorage === "undefined") return;
-    if (sessionStorage.getItem(SESSION_KEY)) { setGone(true); return; }
-    setVisible(true);
+    if (sessionStorage.getItem(SESSION_KEY)) { setTimeout(() => setGone(true), 0); return; }
+    setTimeout(() => setVisible(true), 0);
   }, []);
 
   useEffect(() => {

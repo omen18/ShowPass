@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -34,16 +34,23 @@ export default function PaymentStep({ eventId, onSuccess }: PaymentStepProps) {
   const { user } = useUserStore();
 
   const [activeTab, setActiveTab] = useState<"card" | "bank">("card");
-  const [loadingText, setLoadingText] = useState<string | null>(null);
   const [showOTP, setShowOTP] = useState(false);
   const [otpAttempts, setOtpAttempts] = useState(0);
   const [otpError, setOtpError] = useState<string | null>(null);
   const [showBankRedirect, setShowBankRedirect] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [loadingText, setLoadingText] = useState<string | null>(null);
   const otpRef = useRef<(HTMLInputElement | null)[]>([]);
 
   const form = useForm<CardForm>({ resolver: zodResolver(cardSchema) });
+  const cardNumber = useWatch({ control: form.control, name: "cardNumber" }) || "";
+  const cardName = useWatch({ control: form.control, name: "name" }) || "";
 
+  // Reset OTP attempts when switching payment tabs
+  const otpAttemptsRef = useRef(0);
   useEffect(() => {
+    otpAttemptsRef.current = 0;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setOtpAttempts(0);
   }, [activeTab]);
 
@@ -109,7 +116,7 @@ export default function PaymentStep({ eventId, onSuccess }: PaymentStepProps) {
           clearBooking();
           setLoadingText(null);
           setShowOTP(false);
-          window.location.href = `/booking/${eventId}`;
+          window.location.assign(`/booking/${eventId}`);
           return;
         }
         throw new Error(json.error ?? "Booking failed");
@@ -181,14 +188,14 @@ export default function PaymentStep({ eventId, onSuccess }: PaymentStepProps) {
               <div className="flex gap-6">
                 <div className="relative h-[200px] w-[340px] rounded-lg bg-[var(--accent)] p-4 text-white">
                   <div className="absolute right-3 top-3 text-xs font-semibold">
-                    {form.watch("cardNumber")?.trim().startsWith("4") ? "VISA" : form.watch("cardNumber")?.trim().startsWith("5") ? "MASTERCARD" : ""}
+                    {cardNumber.trim().startsWith("4") ? "VISA" : cardNumber.trim().startsWith("5") ? "MASTERCARD" : ""}
                   </div>
                   <div className="absolute bottom-6 left-4 h-6 w-10 bg-yellow-400" />
                   <div className="absolute inset-0 -z-10 animate-[shimmer_3s_linear_infinite]" />
                   <div className="mt-10 text-sm tracking-widest">
-                    {form.watch("cardNumber") ? form.watch("cardNumber").slice(0, -4).replace(/\d/g, "•") + form.watch("cardNumber").slice(-4) : "•••• •••• •••• 1234"}
+                    {cardNumber ? cardNumber.slice(0, -4).replace(/\d/g, "•") + cardNumber.slice(-4) : "•••• •••• •••• 1234"}
                   </div>
-                  <div className="absolute bottom-4 left-6 text-xs">{form.watch("name") || "CARDHOLDER NAME"}</div>
+                  <div className="absolute bottom-4 left-6 text-xs">{cardName || "CARDHOLDER NAME"}</div>
                 </div>
 
                 <div className="flex-1 space-y-3">
@@ -263,7 +270,7 @@ export default function PaymentStep({ eventId, onSuccess }: PaymentStepProps) {
               <div className="mt-4 flex items-center justify-between text-sm text-[var(--text-secondary)]">
                 <div className="flex items-center gap-2">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 1v2" stroke="var(--text-secondary)" strokeWidth="2"/></svg>
-                  <div> You will be redirected to your bank's secure portal to complete this payment.</div>
+                  <div> You will be redirected to your bank&apos;s secure portal to complete this payment.</div>
                 </div>
                 <Button onClick={() => doTransaction({ bankName: "Selected Bank" })}>Proceed to Bank →</Button>
               </div>

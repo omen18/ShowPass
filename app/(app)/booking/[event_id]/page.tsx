@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { getEventById } from "@/lib/queries/events";
 import BookingClient from "./BookingClient";
 

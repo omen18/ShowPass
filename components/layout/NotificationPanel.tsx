@@ -34,7 +34,7 @@ const TYPE_COLOR: Record<AppNotification["type"], string> = {
 export default function NotificationPanel() {
   const router = useRouter();
   const { isAuthed } = useUserStore();
-  const { readIds, markRead, markAllRead, isRead } = useNotificationStore();
+  const { markRead, markAllRead, isRead } = useNotificationStore();
 
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
@@ -45,12 +45,14 @@ export default function NotificationPanel() {
 
   useEffect(() => {
     if (!isAuthed) return;
-    setLoading(true);
-    fetch("/api/notifications")
-      .then((r) => r.ok ? r.json() : { data: [] })
-      .then((j) => setNotifications(j.data ?? []))
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    queueMicrotask(() => {
+      setLoading(true);
+      fetch("/api/notifications")
+        .then((r) => r.ok ? r.json() : { data: [] })
+        .then((j) => setNotifications(j.data ?? []))
+        .catch(() => {})
+        .finally(() => setLoading(false));
+    });
   }, [isAuthed]);
 
   // Refresh on open

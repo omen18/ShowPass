@@ -92,7 +92,11 @@ function SeatStep({ event }: { event: EventSummary }) {
   }
 
   useEffect(() => {
-    refreshSeats().finally(() => setLoading(false));
+    const load = async () => {
+      await refreshSeats();
+      setLoading(false);
+    };
+    load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [event.event_id]);
 
@@ -613,10 +617,11 @@ const slideVariants = {
 export default function BookingClient({ event }: { event: EventSummary }) {
   const { currentStep } = useBookingFlow();
   const router = useRouter();
+  const [dir, setDir] = useState(1);
   const prevStepRef = useRef(currentStep);
-  const dir = currentStep > prevStepRef.current ? 1 : -1;
 
   useEffect(() => {
+    setDir(currentStep > prevStepRef.current ? 1 : -1);
     prevStepRef.current = currentStep;
   }, [currentStep]);
 

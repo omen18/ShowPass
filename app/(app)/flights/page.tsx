@@ -4,8 +4,8 @@ import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Plane, MapPin, Calendar, Users, ArrowRight,
-  ArrowLeftRight, Search, ChevronDown, Star, Clock,
-  Zap, Filter, SortAsc,
+  ArrowLeftRight, Search, Star,
+  Filter, SortAsc,
 } from "lucide-react";
 import ServiceBookingModal, { ServiceItem } from "@/components/shared/ServiceBookingModal";
 

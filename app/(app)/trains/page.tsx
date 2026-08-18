@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Train, MapPin, Calendar, Users, Search, ArrowRight, Clock, Star, Zap } from "lucide-react";
+import { Train, MapPin, Calendar, Search, Clock, Star } from "lucide-react";
 import ServiceBookingModal, { ServiceItem } from "@/components/shared/ServiceBookingModal";
 
 interface TrainRoute {
@@ -151,8 +151,6 @@ export default function TrainsPage() {
   const [to, setTo] = useState("Delhi");
   const [date, setDate] = useState(() => new Date(Date.now() + 86400000).toISOString().slice(0, 10));
   const [searched, setSearched] = useState(false);
-  const [selectedTrain, setSelectedTrain] = useState<TrainRoute | null>(null);
-  const [selectedClass, setSelectedClass] = useState<string | null>(null);
   const [bookingItem, setBookingItem] = useState<ServiceItem | null>(null);
 
   const results = useMemo(() => {

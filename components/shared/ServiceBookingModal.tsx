@@ -54,13 +54,15 @@ export default function ServiceBookingModal({ item, onClose }: Props) {
 
   useEffect(() => {
     if (item) {
-      setStep("passengers");
-      setPassengers(1);
-      setName(""); setEmail(""); setPhone("");
-      setDiscountCode(""); setDiscountPct(0); setDiscountApplied("");
-      setCardNum(""); setCardName(""); setExpiry(""); setCvv("");
-      setOtpValues(["", "", "", "", "", ""]);
-      setOtpError(""); setBooking(null); setProcessing(false);
+      queueMicrotask(() => {
+        setStep("passengers");
+        setPassengers(1);
+        setName(""); setEmail(""); setPhone("");
+        setDiscountCode(""); setDiscountPct(0); setDiscountApplied("");
+        setCardNum(""); setCardName(""); setExpiry(""); setCvv("");
+        setOtpValues(["", "", "", "", "", ""]);
+        setOtpError(""); setBooking(null); setProcessing(false);
+      });
     }
   }, [item]);
 

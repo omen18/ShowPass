@@ -528,7 +528,7 @@ export default function Ticket3D({
         el.removeChild(renderer.domElement);
       }
     };
-  }, [amount, bookingId, eventDate, eventName, guestName, paymentMethod, palette.accent, palette.accentDark, palette.accentSoft, palette.ink, palette.paper, palette.paperAlt, qrSeed, seats, venueLocation, venueName]);
+  }, [amount, bookingId, eventDate, eventName, guestName, paymentMethod, palette.accent, palette.accentDark, palette.accentSoft, palette.ink, palette.paper, palette.paperAlt, qrSeed, seats, venueLocation, venueName, formattedDate, initials, palette.glow]);
 
   return <div ref={mountRef} style={{ width: 540, height: 340 }} className="mx-auto" />;
 }

@@ -2,10 +2,11 @@
 
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import {
   Building2, MapPin, Calendar, Users, Search,
   Star, Wifi, Waves, Dumbbell, UtensilsCrossed,
-  Car, Coffee, Heart, ArrowRight, Filter, SortAsc,
+  Car, Coffee, Heart, ArrowRight,
 } from "lucide-react";
 import ServiceBookingModal, { ServiceItem } from "@/components/shared/ServiceBookingModal";
 
@@ -216,13 +217,15 @@ export default function HotelsPage() {
                       >
                         {/* Image */}
                         <div className="relative sm:w-56 h-48 sm:h-auto shrink-0 overflow-hidden bg-gradient-to-br from-amber-100 to-amber-200">
-                          <img
+                          <Image
+                            fill
+                            unoptimized
                             src={`https://picsum.photos/${hotel.image}/400/300`}
                             alt={hotel.name}
                             className="absolute inset-0 h-full w-full object-cover"
                           />
                           <button
-                            onClick={() => setWishlist((w) => { const n = new Set(w); n.has(hotel.id) ? n.delete(hotel.id) : n.add(hotel.id); return n; })}
+                            onClick={() => setWishlist((w) => { const n = new Set(w); if (n.has(hotel.id)) { n.delete(hotel.id); } else { n.add(hotel.id); } return n; })}
                             className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow hover:scale-110 transition-transform"
                           >
                             <Heart size={14} className={wishlist.has(hotel.id) ? "fill-red-500 text-red-500" : "text-gray-400"} />

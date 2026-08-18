@@ -66,7 +66,7 @@ export default function ReviewsSection() {
               </div>
 
               {/* Review text */}
-              <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-3">"{review.text}"</p>
+              <p className="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-3">&quot;{review.text}&quot;</p>
 
               {/* Author */}
               <div className="flex items-center justify-between">

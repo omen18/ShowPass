@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 const EVENTS = [
   { id: 14, title: "Arijit Singh — Aashiqui Live", category: "Concert", date: "Jun 15", city: "Delhi", price: 1999, badge: "HOT", img: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&q=80", color: "from-rose-600 to-pink-700" },
@@ -67,7 +68,7 @@ export default function EventsShowcase() {
               initial={{ opacity: 0, scale: 0.9 }} animate={inView ? { opacity: 1, scale: 1 } : {}} transition={{ delay: 0.15 + i * 0.06 }}
               className="group relative rounded-2xl overflow-hidden cursor-pointer aspect-[3/4] bg-gray-900">
               {/* Poster */}
-              <img src={event.img} alt={event.title}
+              <Image src={event.img} alt={event.title} fill unoptimized
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
 
               {/* Gradient overlay */}

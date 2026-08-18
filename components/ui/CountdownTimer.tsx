@@ -10,11 +10,13 @@ interface CountdownTimerProps {
 }
 
 export default function CountdownTimer({ seconds, onExpire }: CountdownTimerProps) {
+  const [prevSeconds, setPrevSeconds] = useState(seconds);
   const [remaining, setRemaining] = useState(seconds);
 
-  useEffect(() => {
+  if (seconds !== prevSeconds) {
+    setPrevSeconds(seconds);
     setRemaining(seconds);
-  }, [seconds]);
+  }
 
   useEffect(() => {
     if (remaining <= 0) {
