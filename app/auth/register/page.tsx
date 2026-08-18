@@ -277,17 +277,17 @@ export default function RegisterPage() {
           password: form.password,
         }),
       });
-      const json = await res.json();
+      const json = await res.json().catch(() => null);
 
       if (!res.ok) {
         if (res.status === 409) {
           // Highlight the email field specifically
           setFieldErrors((e) => ({ ...e, email: "This email is already registered" }));
           setGlobalError("already_exists");
-        } else if (json.field) {
+        } else if (json?.field) {
           setFieldErrors((e) => ({ ...e, [json.field]: json.error }));
         } else {
-          setGlobalError(json.error ?? "Unable to create account. Please try again.");
+          setGlobalError(json?.error ?? `Unable to create account (${res.status}). Please try again.`);
         }
         return;
       }

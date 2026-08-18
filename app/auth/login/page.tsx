@@ -178,8 +178,8 @@ function LoginContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      const json = await res.json();
-      if (!res.ok) { setError(json.error ?? "Invalid credentials"); return; }
+      const json = await res.json().catch(() => null);
+      if (!res.ok) { setError(json?.error ?? `Server error (${res.status}). Please try again.`); return; }
       setUser(json.data);
       setSuccess({ name: json.data.name });
       setTimeout(() => {
@@ -190,7 +190,7 @@ function LoginContent() {
         router.push(params.get("returnUrl") ?? "/events");
       }, 2200);
     } catch {
-      setError("Network error. Please try again.");
+      setError("Network error. Could not connect to the server.");
     } finally {
       setLoading(false);
     }
