@@ -7,8 +7,6 @@ const config = [
     ignores: [
       "Untitled/**",
       "scripts/**",
-      "my sql permission/**",
-      "mysql permission/**",
     ],
   },
   ...nextCoreWebVitals,

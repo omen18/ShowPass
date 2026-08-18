@@ -37,7 +37,5 @@ next-env.d.ts
 
 # backups and local settings
 Untitled/
-my sql permission/
-mysql permission/
 *.tmp
 
