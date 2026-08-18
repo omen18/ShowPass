@@ -36,30 +36,10 @@ export async function POST(request: Request) {
   }
 
   const { email, password } = parsed.data;
-  const normalizedEmail = email.toLowerCase();
+  const normalizedEmail = email.toLowerCase().trim();
 
   if (shouldUseDevAuth()) {
-    const user = findDevUserByEmail(normalizedEmail);
-    if (!user || user.password !== password) {
-      return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
-    }
-
-    await setSessionCookie({
-      user_id: user.user_id,
-      email: user.email,
-      name: user.name,
-      is_admin: Boolean(user.role === "admin"),
-    });
-
-    return NextResponse.json({
-      data: {
-        user_id: user.user_id,
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        role: user.role ?? "user",
-      },
-    });
+    return handleDevLogin(normalizedEmail, password);
   }
 
   try {
@@ -69,24 +49,25 @@ export async function POST(request: Request) {
     );
     const user = rows[0];
 
-    // IMPORTANT: same response for "wrong email" and "wrong password" to prevent
-    // email enumeration attacks.
     if (!user) {
       return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
     }
 
-    let ok: boolean;
+    let ok = false;
     if (isBcryptHash(user.password)) {
       ok = await verifyPassword(password, user.password);
     } else {
-      // Legacy plaintext path. Accept the comparison once, then upgrade in place.
       ok = password === user.password;
       if (ok) {
-        const newHash = await hashPassword(password);
-        await db.query<ResultSetHeader>(
-          "UPDATE `Users` SET password = ? WHERE user_id = ?",
-          [newHash, user.user_id],
-        );
+        try {
+          const newHash = await hashPassword(password);
+          await db.query<ResultSetHeader>(
+            "UPDATE `Users` SET password = ? WHERE user_id = ?",
+            [newHash, user.user_id],
+          );
+        } catch (upgradeErr) {
+          console.warn("Failed to upgrade legacy password hash:", upgradeErr);
+        }
       }
     }
 
@@ -110,8 +91,15 @@ export async function POST(request: Request) {
         role: user.is_admin === 1 ? "admin" : "user",
       },
     });
-  } catch {
-    const user = findDevUserByEmail(normalizedEmail);
+  } catch (dbErr) {
+    console.error("Database login query failed, attempting fallback:", dbErr);
+    return handleDevLogin(normalizedEmail, password);
+  }
+}
+
+async function handleDevLogin(email: string, password: string) {
+  try {
+    const user = findDevUserByEmail(email);
     if (!user || user.password !== password) {
       return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
     }
@@ -132,5 +120,8 @@ export async function POST(request: Request) {
         role: user.role ?? "user",
       },
     });
+  } catch (fallbackErr) {
+    console.error("Dev fallback login failed:", fallbackErr);
+    return NextResponse.json({ error: "Authentication failed. Please try again." }, { status: 500 });
   }
 }
